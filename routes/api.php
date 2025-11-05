@@ -6,7 +6,7 @@ use App\Http\Controllers\TaskController;
 use App\Models\User;
 
 
-Route::controller(ProductController::class)->group( function () {
+/*Route::controller(ProductController::class)->group( function () {
 
     Route::get('/products', 'index')->name('products');
     Route::get('/get-product/{id}','show')->name('get-product-id');
@@ -16,7 +16,7 @@ Route::controller(ProductController::class)->group( function () {
     Route::put('/update-product', 'update')->name('update-product');
     Route::delete('/delete-product/{id}','destroy')->name('delete-product-id');
     Route::post('/upload-photo','upload_image')->name('add_product_photo');
-});
+});*/
 
 Route::controller(TaskController::class)->group( function() {
     Route::get('/tasks', 'index')->name('tasks');
