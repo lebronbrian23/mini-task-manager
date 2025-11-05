@@ -55,7 +55,7 @@ jobs:
         run: php artisan migrate --env=testing --no-interaction
 
       - name: Build Assets
-        run: npm run build
+        run: VITE_SKIP_WAYFINDER=true npm run build
 
       - name: Tests
         run: ./vendor/bin/phpunit
