@@ -63,9 +63,6 @@ jobs:
       - name: Config cache
         run: php artisan config:clear
 
-      - name: View cache
-        run: php artisan view:clear
-
       - name: Build Assets
         run: VITE_SKIP_WAYFINDER=true npm run build
 
