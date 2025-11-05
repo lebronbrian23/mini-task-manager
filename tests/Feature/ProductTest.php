@@ -12,6 +12,13 @@ use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
+    public function test_returns_a_successful_response()
+    {
+        $response = $this->get(route('home'));
+
+        $response->assertStatus(200);
+    }
+
     //use RefreshDatabase;
 
     /**
