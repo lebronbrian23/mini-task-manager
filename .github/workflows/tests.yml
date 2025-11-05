@@ -63,8 +63,11 @@ jobs:
       - name: Config cache
         run: php artisan config:clear
 
+      - name: Generate Wayfinder routes
+        run: php artisan wayfinder:generate
+
       - name: Build Assets
-        run: VITE_SKIP_WAYFINDER=true npm run build
+        run: npm run build
 
       - name: Tests
         run: ./vendor/bin/phpunit
