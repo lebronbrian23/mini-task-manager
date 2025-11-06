@@ -111,7 +111,7 @@ class TaskTest extends TestCase
      * Test that a form to create a task displays
      */
     public function test_can_show_create_task_form(){
-        $response = $this->get(route('add-task-form'));
+        $response = $this->get(route('task-add-form'));
         $response->assertStatus(200);
     }
 

@@ -12,18 +12,11 @@ use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
-    public function test_returns_a_successful_response()
-    {
-        $response = $this->get(route('home'));
-
-        $response->assertStatus(200);
-    }
-
-    //use RefreshDatabase;
+    use RefreshDatabase;
 
     /**
      *  Test if products index returns the expected static list
-     *
+     */
     public function test_can_list_products()
     {
         $response = $this->get(route('products'));
@@ -36,7 +29,7 @@ class ProductTest extends TestCase
             ]);
             /*->assertJsonFragment(['id' => 1, 'name' => 'matooke', 'origin' => 'uganda'])
             ->assertJsonFragment(['id' => 2, 'name' => 'rice', 'origin' => 'india'])
-            ->assertJsonFragment(['id' => 3, 'name' => 'beans', 'origin' => 'burundi']);*
+            ->assertJsonFragment(['id' => 3, 'name' => 'beans', 'origin' => 'burundi']);*/
 
         // Ensure exactly 3 products are returned
         $data = $response->json();
@@ -46,15 +39,15 @@ class ProductTest extends TestCase
 
     /**
         Test if add product form shows
-     *
+     */
     public function test_can_show_add_product_form() {
-        $response = $this->get(route('add-product-form'));
+        $response = $this->get(route('product-add-form'));
         $response->assertStatus(200);
 
     }
     /**
      * Test if a product can be added
-     *
+     */
     public function test_can_add_product()
     {
 
@@ -72,7 +65,7 @@ class ProductTest extends TestCase
 
     /**
      *  Test if an image can be uploaded
-     *
+     */
     public function test_can_upload_image()
     {
         Storage::fake('public');
@@ -106,12 +99,11 @@ class ProductTest extends TestCase
 
     /**
      * Test if edit product form shows
-     *
+     */
     public function test_can_show_edit_product_form()
     {
         $id = random_int(1,4);
         $response = $this->get(route('edit-product-form-id',$id));
         $response->assertStatus(200);
     }
-      */
 }

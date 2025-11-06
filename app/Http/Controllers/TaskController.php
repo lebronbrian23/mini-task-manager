@@ -126,7 +126,7 @@ class TaskController extends Controller
         ]);
 
         if ( $update_task->status === 'completed' ) {
-            log::info('Task completed email dispatched');
+            log::info('Task completed email dispatched here!');
             TaskCompleted::dispatch($update_task);
         }
 

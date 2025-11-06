@@ -15,7 +15,6 @@ class SendTaskCompletionEmail extends Mailable
     use Queueable, SerializesModels;
 
     protected $task;
-    private $task_url;
 
     /**
      * Create a new message instance.
@@ -45,7 +44,7 @@ class SendTaskCompletionEmail extends Mailable
         return new Content(
             markdown: 'mail.task.completion',
             with: [
-                'url' => $this->task_url
+                'url' => route('get-task-id',$this->task->id)
             ],
         );
     }
