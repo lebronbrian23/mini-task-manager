@@ -95,9 +95,9 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show($id)
     {
-        return inertia::render('task/ShowTask');
+        return inertia::render('task/ShowTask',['id' => $id]);
     }
 
     /**

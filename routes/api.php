@@ -19,7 +19,7 @@ Route::controller(TaskController::class)->group(function() {
     Route::get('/tasks', 'index')->name('tasks');
     Route::get('/get-tasks', 'getTasks')->name('get-tasks');
     Route::get('/get-user-tasks/{user_id}', 'getTasks')->name('get-user-tasks');
-    Route::get('/task','show')->name('show-task');
+    Route::get('/task/{id}','show')->name('show-task');
     Route::get('/get-task/{id}','getTask')->name('get-task-id');
     Route::get('/add-task', 'create')->name('task-add-form');
     Route::post('/add-task', 'store')->name('save-task');

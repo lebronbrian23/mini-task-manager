@@ -77,6 +77,26 @@ class TaskTest extends TestCase
     }
 
     /**
+     *  Test if show task page displays
+     */
+    public function test_can_show_single_task_page()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $task = Task::create([
+            'name' => fake()->title,
+            'description' => fake()->text,
+            'user_id' => $user->id
+        ]);
+
+        $response = $this->get(route('show-task', $task->id));
+
+        $response->assertStatus(200);
+    }
+
+    /**
      *  Test that can get a single task
      */
     public function test_can_get_a_single_task()
