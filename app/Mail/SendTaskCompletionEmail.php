@@ -6,9 +6,11 @@ use App\Models\Task;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class SendTaskCompletionEmail extends Mailable
 {
@@ -30,6 +32,7 @@ class SendTaskCompletionEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
+            to: [new Address($this->task->user->email, $this->task->user->name)],
             subject: 'Send Task Completion Email',
             tags: ['task'],
             metadata: ['task_id' => $this->task->id]
@@ -44,6 +47,7 @@ class SendTaskCompletionEmail extends Mailable
         return new Content(
             markdown: 'mail.task.completion',
             with: [
+                'task' => $this->task,
                 'url' => route('get-task-id',$this->task->id)
             ],
         );

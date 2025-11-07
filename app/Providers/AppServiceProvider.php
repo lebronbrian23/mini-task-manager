@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Events\TaskCompleted;
-use App\Listeners\SendTaskCompletionEmail;
+use App\Listeners\SendTaskCompletionEmailListener;
 use App\Models\Task;
 use App\Policies\TaskPolicy;
 use Illuminate\Support\Facades\Event;
@@ -27,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(Task::class , TaskPolicy::class);
-        Event::listen(TaskCompleted::class , SendTaskCompletionEmail::class);
+        Event::listen(TaskCompleted::class , SendTaskCompletionEmailListener::class);
     }
 }

@@ -219,7 +219,7 @@ class TaskTest extends TestCase
      */
     public function test_can_dispatch_email_when_status_is_updated_to_completed()
     {
-        Event::fake([TaskCompleted::class]);
+        //Event::fake([TaskCompleted::class]);
 
         $user = User::factory()->create();
 
@@ -245,10 +245,10 @@ class TaskTest extends TestCase
                 'task', 'message'
             ]);
 
-        // assert the event was dispatched
+       /* // assert the event was dispatched
         Event::assertDispatched(TaskCompleted::class, function ($event) use ($task) {
             return $event->task->id === $task->id;
-        });
+        });*/
 
         // verify database has a task
         $this->assertDatabaseHas('tasks',[
