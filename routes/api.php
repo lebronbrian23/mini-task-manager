@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TaskController;
 use App\Models\User;
 
@@ -28,4 +29,10 @@ Route::controller(TaskController::class)->group(function() {
     Route::delete('/delete-task/{task}', 'destroy')->name('delete-task-id');
     Route::put('/restore-task/{task}', 'restore')->name('restore-task-id');
     Route::delete('/delete-task-permanently/{task}', 'destroy_permanently')->name('delete-task-permanently-id');
+});
+
+Route::controller(RoleController::class)->group(function(){
+   Route::get('/get-role/{id}', 'getRole')->name('get-role');
+   Route::get('/get-roles', 'getRoles')->name('get-roles');
+   Route::post('/add-role', 'store')->name('add-role');
 });

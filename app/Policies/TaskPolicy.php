@@ -16,7 +16,7 @@ class TaskPolicy
      */
     public function before(User $user, $ability)
     {
-        if ( $user->is_admin ?? false) {
+        if ( $user->hasRole('admin') ?? false) {
             return true;
         }
     }

@@ -18,6 +18,7 @@ class TaskController extends Controller
     use AuthorizesRequests;
     /**
      * Display a list of task page.
+     * @return \Inertia\Response
      */
     public function index()
     {
@@ -26,7 +27,8 @@ class TaskController extends Controller
 
     /**
      *  Get a list of Tasks
-     * @return \Illuminate\Http\JsonResponse
+     * @param $user_id
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getTasks($user_id = null)
     {
@@ -37,13 +39,13 @@ class TaskController extends Controller
         // If user_id is provided, verify authorization
         if (!is_null($user_id)) {
             // Non-admins can only view their own tasks
-            if ($user->id !== (int)$user_id && !$user->is_admin) {
+            if ($user->id !== (int)$user_id && !$user->hasRole('admin') ) {
                 abort(403, 'You can only view your own tasks.');
             }
             $tasks = Task::where('user_id', $user_id)->get();
         } else {
             // If no user_id provided
-            if ($user->is_admin) {
+            if ($user->hasRole('admin')) {
                 // Admins can see all tasks
                 $tasks = Task::all();
             } else {
@@ -57,6 +59,7 @@ class TaskController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     * @return \Inertia\Response
      */
     public function create()
     {
@@ -65,6 +68,8 @@ class TaskController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @param StoreTaskRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(StoreTaskRequest $request)
     {
@@ -83,7 +88,8 @@ class TaskController extends Controller
 
     /**
      * Show a Task
-     * @return Task
+     * @param $id
+     * @return mixed
      */
     public function getTask($id)
     {
@@ -94,6 +100,8 @@ class TaskController extends Controller
 
     /**
      * Display the specified resource.
+     * @param $id
+     * @return \Inertia\Response
      */
     public function show($id)
     {
@@ -102,6 +110,8 @@ class TaskController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * @param Task $task
+     * @return \Inertia\Response
      */
     public function edit(Task $task)
     {
@@ -111,6 +121,9 @@ class TaskController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @param UpdateTaskRequest $request
+     * @param Task $task
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
@@ -135,6 +148,8 @@ class TaskController extends Controller
 
     /**
      * Soft delete task.
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
@@ -152,6 +167,8 @@ class TaskController extends Controller
 
     /**
      *  Restore soft deleted task
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function restore($id)
     {
@@ -165,7 +182,9 @@ class TaskController extends Controller
     }
 
     /**
-     *  Delete task permanently
+     * Permanently delete the specified resource from storage.
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy_permanently($id)
     {

@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Events\TaskCompleted;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -66,8 +68,36 @@ class TaskTest extends TestCase
             ]);
         }
 
-        $admin = User::factory()->create(['is_admin' => 'yes']);
-        
+        $admin_role = Role::create([
+            'name' => 'admin',
+            'description' => 'This is an admin role'
+        ]);
+
+        $add_permission = Permission::create([
+            'name' => 'add_task',
+            'description' => 'This is an add task permission'
+        ]);
+
+        $edit_permission = Permission::create([
+            'name' => 'edit_task',
+            'description' => 'This is an edit task permission'
+        ]);
+
+        $delete_permission = Permission::create([
+            'name' => 'delete_task',
+            'description' => 'This is a delete task permission'
+        ]);
+
+        $admin_role->permissions()->attach([
+            $add_permission->id,
+            $edit_permission->id,
+            $delete_permission->id,
+        ]);
+
+        $admin = User::factory()->create();
+
+        $admin->roles()->attach([$admin_role->id]);
+
         $this->actingAs($admin);
 
         $response = $this->get(route('get-tasks'));
@@ -239,7 +269,7 @@ class TaskTest extends TestCase
      */
     public function test_can_dispatch_email_when_status_is_updated_to_completed()
     {
-        //Event::fake([TaskCompleted::class]);
+        Event::fake([TaskCompleted::class]);
 
         $user = User::factory()->create();
 
@@ -265,10 +295,10 @@ class TaskTest extends TestCase
                 'task', 'message'
             ]);
 
-       /* // assert the event was dispatched
+       // assert the event was dispatched
         Event::assertDispatched(TaskCompleted::class, function ($event) use ($task) {
             return $event->task->id === $task->id;
-        });*/
+        });
 
         // verify database has a task
         $this->assertDatabaseHas('tasks',[
