@@ -49,7 +49,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): Response
     {
-        return $user->id === $task->user_id ? Response::allow() : Response::deny('You can\'t update task.',403);
+        return $user->id === $task->user_id ? Response::allow() : Response::deny('You can\'t update tasks.',403);
     }
 
     /**
@@ -57,7 +57,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): Response
     {
-        return $user->id === $task->user_id ? Response::allow() : Response::deny('You can\'t delete task.',403);
+        return $user->id === $task->user_id ? Response::allow() : Response::deny('You can\'t delete tasks.',403);
     }
 
     /**
@@ -65,7 +65,7 @@ class TaskPolicy
      */
     public function restore(User $user, Task $task): Response
     {
-        return $user->id === $task->user_id ? Response::allow() : Response::deny('You can\'t restore task.',403);
+        return $user->id === $task->user_id ? Response::allow() : Response::deny('You can\'t restore tasks.',403);
 
     }
 
@@ -74,6 +74,6 @@ class TaskPolicy
      */
     public function forceDelete(User $user, Task $task): Response
     {
-        return $user->id === $task->user_id ? Response::allow() : Response::deny('You can\'t force detele a task.',403);
+        return $user->id === $task->user_id ? Response::allow() : Response::deny('You can\'t force detele a tasks.',403);
     }
 }

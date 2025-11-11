@@ -38,7 +38,7 @@ class ProductTest extends TestCase
     }
 
     /**
-        Test if add product form shows
+        Test if add products form shows
      */
     public function test_can_show_add_product_form() {
         $response = $this->get(route('product-add-form'));
@@ -46,7 +46,7 @@ class ProductTest extends TestCase
 
     }
     /**
-     * Test if a product can be added
+     * Test if a products can be added
      */
     public function test_can_add_product()
     {
@@ -58,7 +58,7 @@ class ProductTest extends TestCase
         $response->assertStatus(200)
             ->assertSessionHasNoErrors()
             ->assertJsonStructure([
-                'product' => ['id', 'name', 'origin'],
+                'products' => ['id', 'name', 'origin'],
                 'message'
             ]);
     }
@@ -83,11 +83,11 @@ class ProductTest extends TestCase
     }
 
     /**
-     *  Test if a product name is required
+     *  Test if a products name is required
      *
     public function test_product_name_is_required()
     {
-        $response = $this->post(route('add-product'),[
+        $response = $this->post(route('add-products'),[
             'origin' => 'Tz'
         ]);
 
@@ -98,12 +98,12 @@ class ProductTest extends TestCase
      * */
 
     /**
-     * Test if edit product form shows
+     * Test if edit products form shows
      */
     public function test_can_show_edit_product_form()
     {
         $id = random_int(1,4);
-        $response = $this->get(route('edit-product-form-id',$id));
+        $response = $this->get(route('edit-product-form',$id));
         $response->assertStatus(200);
     }
 }

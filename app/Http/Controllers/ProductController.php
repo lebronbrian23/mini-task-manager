@@ -32,7 +32,7 @@ class ProductController extends Controller
      */
     public function create(): \Inertia\Response
     {
-        return inertia::render('product/AddProductForm');
+        return inertia::render('products/AddProductForm');
     }
 
     /***
@@ -81,7 +81,7 @@ class ProductController extends Controller
         $product->origin = $request->origin;
         $product->save();
 
-        return response()->json(['product' => $product, 'message' => 'Product added.'],200);
+        return response()->json(['products' => $product, 'message' => 'Product added.'],200);
 
     }
 
@@ -115,7 +115,7 @@ class ProductController extends Controller
     public function show(string $id)
     {
         $product = Product::findorfail($id);
-        return response()->json(['product' => $product], 200);
+        return response()->json(['products' => $product], 200);
     }
 
     /**
@@ -123,7 +123,7 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        return inertia::render('product/EditProductForm', ['id' => $id]);
+        return inertia::render('products/EditProductForm', ['id' => $id]);
     }
 
     /**
@@ -142,7 +142,7 @@ class ProductController extends Controller
                 'name' => $request->name,
                 'origin' => $request->origin
             ]);
-            return response()->json(['product' => $product ,'message' => 'Updated'], 200);
+            return response()->json(['products' => $product ,'message' => 'Updated'], 200);
         } else {
             return  response()->json(['message'=> 'Product not found.'], 400);
         }

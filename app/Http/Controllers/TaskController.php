@@ -17,12 +17,12 @@ class TaskController extends Controller
 {
     use AuthorizesRequests;
     /**
-     * Display a list of task page.
+     * Display a list of tasks page.
      * @return \Inertia\Response
      */
     public function index()
     {
-        return inertia::render('task/ListTask');
+        return inertia::render('tasks/ListTasks');
     }
 
     /**
@@ -63,7 +63,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return inertia::render('task/AddTaskForm');
+        return inertia::render('tasks/AddTaskForm');
     }
 
     /**
@@ -83,7 +83,7 @@ class TaskController extends Controller
         $task->user_id = $request->user_id;
         $task->save();
 
-        return response()->json(['task' => $task ,'message' => 'Task added'] , 200);
+        return response()->json(['tasks' => $task ,'message' => 'Task added'] , 200);
     }
 
     /**
@@ -105,7 +105,7 @@ class TaskController extends Controller
      */
     public function show($id)
     {
-        return inertia::render('task/ShowTask',['id' => $id]);
+        return inertia::render('tasks/ShowTask',['task_id' => $id]);
     }
 
     /**
@@ -116,7 +116,7 @@ class TaskController extends Controller
     public function edit(Task $task)
     {
         $this->authorize('update', $task);
-        return inertia::render('task/EditTaskForm');
+        return inertia::render('tasks/EditTaskForm');
     }
 
     /**
@@ -143,11 +143,11 @@ class TaskController extends Controller
             TaskCompleted::dispatch($update_task);
         }
 
-        return response()->json(['message' => 'Task updated.' ,'task' => $update_task ], 200);
+        return response()->json(['message' => 'Task updated.' ,'tasks' => $update_task ], 200);
     }
 
     /**
-     * Soft delete task.
+     * Soft delete tasks.
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
@@ -166,7 +166,7 @@ class TaskController extends Controller
     }
 
     /**
-     *  Restore soft deleted task
+     *  Restore soft deleted tasks
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
@@ -192,7 +192,6 @@ class TaskController extends Controller
 
         $this->authorize('forceDelete', $task);
 
-        $task = Task::findorfail($task->id);
         if ($task) {
             //soft delete
             $task->delete();

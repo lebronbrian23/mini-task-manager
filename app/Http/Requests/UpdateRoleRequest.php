@@ -11,7 +11,9 @@ class UpdateRoleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        // Authorization is handled in the controller via policies.
+        // Allow the request to proceed to validation and policy checks.
+        return true;
     }
 
     /**
@@ -22,7 +24,8 @@ class UpdateRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

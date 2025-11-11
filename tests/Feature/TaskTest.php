@@ -75,17 +75,17 @@ class TaskTest extends TestCase
 
         $add_permission = Permission::create([
             'name' => 'add_task',
-            'description' => 'This is an add task permission'
+            'description' => 'This is an add tasks permission'
         ]);
 
         $edit_permission = Permission::create([
             'name' => 'edit_task',
-            'description' => 'This is an edit task permission'
+            'description' => 'This is an edit tasks permission'
         ]);
 
         $delete_permission = Permission::create([
             'name' => 'delete_task',
-            'description' => 'This is a delete task permission'
+            'description' => 'This is a delete tasks permission'
         ]);
 
         $admin_role->permissions()->attach([
@@ -107,7 +107,7 @@ class TaskTest extends TestCase
     }
 
     /**
-     *  Test if show task page displays
+     *  Test if show tasks page displays
      */
     public function test_can_show_single_task_page()
     {
@@ -127,7 +127,7 @@ class TaskTest extends TestCase
     }
 
     /**
-     *  Test that can get a single task
+     *  Test that can get a single tasks
      */
     public function test_can_get_a_single_task()
     {
@@ -141,7 +141,7 @@ class TaskTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->get(route('get-task-id', $task->id));
+        $response = $this->get(route('get-task', $task->id));
 
         $response->assertStatus(200)
         ->assertJsonIsObject();
@@ -158,15 +158,16 @@ class TaskTest extends TestCase
     }
 
     /**
-     * Test that a form to create a task displays
+     * Test that a form to create a tasks displays
      */
-    public function test_can_show_create_task_form(){
+    public function test_can_show_create_task_form()
+    {
         $response = $this->get(route('task-add-form'));
         $response->assertStatus(200);
     }
 
     /**
-     * Test that an authenticated user can add a task
+     * Test that an authenticated user can add a tasks
      */
     public function test_can_add_a_task(){
 
@@ -183,10 +184,10 @@ class TaskTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'message',
-                'task' => ['id', 'name', 'description', 'user_id']
+                'tasks' => ['id', 'name', 'description', 'user_id']
             ]);
 
-        // verify the task was actually created in the database
+        // verify the tasks was actually created in the database
         $this->assertDatabaseHas('tasks', [
             'user_id' => $user->id,
         ]);
@@ -226,7 +227,7 @@ class TaskTest extends TestCase
     }
 
     /**
-     * Test that a task can be updated
+     * Test that a tasks can be updated
      */
     public function test_can_update_task()
     {
@@ -250,10 +251,10 @@ class TaskTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'message','task'
+                'message','tasks'
             ]);
 
-        //verify the task was actually updated in the db
+        //verify the tasks was actually updated in the db
         $this->assertDatabaseHas(
             'tasks',[
                 'id' => $task->id,
@@ -265,7 +266,7 @@ class TaskTest extends TestCase
     }
 
     /**
-     * Test that can dispatch email when the task status is updated to completed
+     * Test that can dispatch email when the tasks status is updated to completed
      */
     public function test_can_dispatch_email_when_status_is_updated_to_completed()
     {
@@ -292,7 +293,7 @@ class TaskTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'task', 'message'
+                'tasks', 'message'
             ]);
 
        // assert the event was dispatched
@@ -300,7 +301,7 @@ class TaskTest extends TestCase
             return $event->task->id === $task->id;
         });
 
-        // verify database has a task
+        // verify database has a tasks
         $this->assertDatabaseHas('tasks',[
             'id' => $task->id,
             'name' => $task->name,
@@ -310,7 +311,7 @@ class TaskTest extends TestCase
 
     }
     /**
-     * Test that event is NOT dispatched when the task status is NOT completed
+     * Test that event is NOT dispatched when the tasks status is NOT completed
      */
     public function test_event_is_not_dispatched_when_task_status_is_not_completed()
     {
@@ -333,7 +334,7 @@ class TaskTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-            ->assertJsonStructure(['task', 'message']);
+            ->assertJsonStructure(['tasks', 'message']);
 
         // Assert that event was not dispatched
         Event::assertNotDispatched(TaskCompleted::class);
@@ -341,7 +342,7 @@ class TaskTest extends TestCase
     }
 
     /**
-     * Test that a user can not update other user task
+     * Test that a user can not update other user tasks
      */
     public function test_user_cannot_update_other_users_task()
     {
@@ -362,12 +363,12 @@ class TaskTest extends TestCase
         ]);
 
         $response->assertStatus(403)
-            ->assertJson(['message' => 'You can\'t update task.']);
+            ->assertJson(['message' => 'You can\'t update tasks.']);
 
     }
 
     /**
-     * Test if task can be deleted
+     * Test if tasks can be deleted
      */
     public function test_can_delete_a_task()
     {
@@ -382,7 +383,7 @@ class TaskTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->delete(route('delete-task-id', $task->id));
+        $response = $this->delete(route('delete-task', $task->id));
 
         $response->assertStatus(200)
             ->assertJsonStructure(['message']);
@@ -402,7 +403,7 @@ class TaskTest extends TestCase
     }
 
     /**
-     * Test that a user can not delete other user task
+     * Test that a user can not delete other user tasks
      */
     public function test_user_cannot_delete_other_users_task()
     {
@@ -417,7 +418,7 @@ class TaskTest extends TestCase
             'user_id' => $user2->id,
         ]);
 
-        $response = $this->delete(route('delete-task-id', $task->id));
+        $response = $this->delete(route('delete-task', $task->id));
 
         $response->assertStatus(403);
 
@@ -425,7 +426,7 @@ class TaskTest extends TestCase
 
 
     /**
-     *  Test if task can be restored
+     *  Test if tasks can be restored
      */
     public function test_can_restore_deleted_task()
     {
@@ -441,13 +442,13 @@ class TaskTest extends TestCase
         // soft delete
         $task->delete();
 
-        // verify task has been deleted
+        // verify tasks has been deleted
         $this->assertSoftDeleted('tasks',[
             'id' => $task->id
         ]);
 
-        // restore the task
-        $response = $this->put(route('restore-task-id', $task->id));
+        // restore the tasks
+        $response = $this->put(route('restore-task', $task->id));
 
         $response->assertStatus(200)
             ->assertJsonStructure(['message']);
@@ -475,7 +476,7 @@ class TaskTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->delete(route('delete-task-permanently-id', $task->id));
+        $response = $this->delete(route('delete-task-permanently', $task->id));
 
         $response->assertStatus(200)
             ->assertJsonStructure(['message']);
@@ -486,7 +487,7 @@ class TaskTest extends TestCase
     }
 
     /**
-     *  test that task name is required
+     *  test that tasks name is required
      */
     public function test_task_name_is_required()
     {
@@ -504,7 +505,7 @@ class TaskTest extends TestCase
     }
 
     /**
-     * Test that task description is required
+     * Test that tasks description is required
      */
     public function test_task_description_is_required()
     {

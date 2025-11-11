@@ -34,7 +34,7 @@ class SendTaskCompletionEmail extends Mailable
         return new Envelope(
             to: [new Address($this->task->user->email, $this->task->user->name)],
             subject: 'Send Task Completion Email',
-            tags: ['task'],
+            tags: ['tasks'],
             metadata: ['task_id' => $this->task->id]
         );
     }
@@ -47,8 +47,8 @@ class SendTaskCompletionEmail extends Mailable
         return new Content(
             markdown: 'mail.task.completion',
             with: [
-                'task' => $this->task,
-                'url' => route('get-task-id',$this->task->id)
+                'tasks' => $this->task,
+                'url' => route('get-tasks-id',$this->task->id)
             ],
         );
     }
