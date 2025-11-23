@@ -266,7 +266,7 @@ class TaskTest extends TestCase
     }
 
     /**
-     * Test that can dispatch email when the tasks status is updated to completed
+     * Test that can dispatch email when the task's status is updated to completed
      */
     public function test_can_dispatch_email_when_status_is_updated_to_completed()
     {
@@ -311,7 +311,7 @@ class TaskTest extends TestCase
 
     }
     /**
-     * Test that event is NOT dispatched when the tasks status is NOT completed
+     * Test that event is NOT dispatched when the task's status is NOT completed
      */
     public function test_event_is_not_dispatched_when_task_status_is_not_completed()
     {

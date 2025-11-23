@@ -48,7 +48,7 @@ class SendTaskCompletionEmail extends Mailable
             markdown: 'mail.task.completion',
             with: [
                 'tasks' => $this->task,
-                'url' => route('get-tasks-id',$this->task->id)
+                'url' => route('get-task',$this->task->id)
             ],
         );
     }

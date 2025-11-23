@@ -32,6 +32,7 @@ class TaskController extends Controller
      */
     public function getTasks($user_id = null)
     {
+
         $this->authorize('viewAny', Task::class);
 
         $user = auth()->user();

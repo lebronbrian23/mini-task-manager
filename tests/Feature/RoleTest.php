@@ -14,6 +14,7 @@ class RoleTest extends TestCase
     use RefreshDatabase;
 
 
+
     /**
      *  Test if a new role form displays
      */
