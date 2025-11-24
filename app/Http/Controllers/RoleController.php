@@ -7,11 +7,14 @@ use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class RoleController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -29,6 +32,7 @@ class RoleController extends Controller
         $this->authorize('view-any', Role::class);
         return Role::all();
     }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -59,6 +63,39 @@ class RoleController extends Controller
     }
 
     /**
+     * Attach permissions to a role.
+     */
+    public function attachPermissions(Request $request, $id)
+    {
+
+        $role = Role::findorFail($id);
+
+        $this->authorize('attach-permission', $role);
+
+        $role->permissions()->attach($request->permission_ids);
+
+        return response()->json(['message' => 'Permissions attached successfully.'], 200);
+    }
+
+    /** Dettach permissions from a role.
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function detachPermissions(Request $request)
+    {
+
+        $role = Role::find($request->role_id);
+
+        $this->authorize('detach-permission', $role);
+
+        $role->permissions()->detach($request->permission_id);
+
+        return response()->json(['message' => 'Permissions detached successfully.'], 200);
+
+    }
+
+    /**
      * Retrieve the specified role by its ID.
      * @param int $id
      * @return \App\Models\Role
@@ -70,6 +107,7 @@ class RoleController extends Controller
         $this->authorize('view-any', $role);
         return $role;
     }
+
     /**
      * Display the specified resource.
      */
@@ -104,11 +142,11 @@ class RoleController extends Controller
         $request->validated();
 
         $update_role->update([
-           'name' => $request->name,
-           'description' => $request->description
+            'name' => $request->name,
+            'description' => $request->description
         ]);
 
-        return response()->json(['message' => 'Role updated.', 'role' => $update_role ], 200);
+        return response()->json(['message' => 'Role updated.', 'role' => $update_role], 200);
     }
 
     /**
@@ -116,13 +154,13 @@ class RoleController extends Controller
      * @param Role $role
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy( $id)
+    public function destroy($id)
     {
         $role = Role::findorfail($id);
 
         $this->authorize('delete', $role);
 
-        if ( $role ) {
+        if ($role) {
             $role->delete();
 
             return response()->json(['message' => 'Role deleted'], 200);
@@ -148,7 +186,7 @@ class RoleController extends Controller
     /**
      *  Delete role permanently
      */
-    public function delete_permanently($id)
+    public function deletePermanently($id)
     {
         $role = Role::findorFail($id);
 
@@ -160,8 +198,8 @@ class RoleController extends Controller
             $role->forceDelete();
 
             return response()->json(['message' => 'Role deleted permanently.'], 200);
-        } else  {
-            return response()->json(['message' => 'Role not found.' ], 200);
+        } else {
+            return response()->json(['message' => 'Role not found.'], 200);
         }
     }
 

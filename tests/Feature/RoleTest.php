@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,7 +13,6 @@ use Tests\TestCase;
 class RoleTest extends TestCase
 {
     use RefreshDatabase;
-
 
 
     /**
@@ -59,6 +59,93 @@ class RoleTest extends TestCase
             'name' => 'customer',
             'description' => 'This is a customer'
         ]);
+    }
+
+    /**
+     * Test can attach a permission to a role
+     */
+    public function test_can_attach_permission_to_role()
+    {
+        $role = Role::create([
+            'name' => 'admin',
+            'description' => 'This is an admin'
+        ]);
+
+        $user = User::factory()->create();
+
+        $user->roles()->attach([$role->id]);
+
+        $user->refresh();
+
+        $this->actingAs($user);
+
+        $new_role = Role::create([
+            'name' => 'customer',
+            'description' => 'This is a customer'
+        ]);
+
+        $permission = Permission::create([
+            'name' => 'create-task',
+            'description' => 'This is a create task permission'
+        ]);
+
+        $response = $this->postJson(route('attach-permission-to-role', $new_role->id), [
+            'permission_ids' => [$permission->id]
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure(['message']);
+
+        $this->assertDatabaseHas('permission_role', [
+            'role_id' => $new_role->id,
+            'permission_id' => $permission->id
+        ]);
+
+    }
+
+    /**
+     * Test can dettach a permission from a role
+     */
+    public function test_can_dettach_permission_from_role()
+    {
+        $role = Role::create([
+            'name' => 'admin',
+            'description' => 'This is an admin'
+        ]);
+
+        $user = User::factory()->create();
+
+        $user->roles()->attach([$role->id]);
+
+        $user->refresh();
+
+        $this->actingAs($user);
+
+        $new_role = Role::create([
+            'name' => 'customer',
+            'description' => 'This is a customer'
+        ]);
+
+        $permission = Permission::create([
+            'name' => 'create-task',
+            'description' => 'This is a create task permission'
+        ]);
+
+        $new_role->permissions()->attach([$permission->id]);
+
+        $response = $this->deleteJson(route('detach-permission-from-role'),[
+            'role_id' => $new_role->id,
+            'permission_ids' => [$permission->id]
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure(['message']);
+
+        $this->assertDatabaseMissing('permission_role', [
+            'role_id' => $new_role->id,
+            'permission_id' => $permission->id
+        ]);
+
     }
 
     /**

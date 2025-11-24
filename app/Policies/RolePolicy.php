@@ -40,6 +40,41 @@ class RolePolicy
         return $user->hasRole('admin') ?  Response::allow() : Response::deny('You can\'t update roles.',403);
     }
 
+    /** Assign role to user
+     * @param User $user
+     * @param Role $role
+     * @return Response
+     */
+    public function assign(User $user, Role $role): Response
+    {
+        return $user->hasRole('admin') ?  Response::allow() : Response::deny('You can\'t assign roles.',403);
+    }
+
+    /**
+     * Remove role from user
+     * @param User $user
+     * @param Role $role
+     * @return Response
+     */
+    public function removeRole(User $user, Role $role): Response
+    {
+        return $user->hasRole('admin') ?  Response::allow() : Response::deny('You can\'t remove roles.',403);
+    }
+
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function attachPermission(User $user, Role $role): Response
+    {
+        return $user->hasRole('admin') ?  Response::allow() : Response::deny('You can\'t attach permissions to a role.',403);
+    }
+
+    public function detachPermission(User $user, Role $role): Response
+    {
+        return $user->hasRole('admin') ?  Response::allow() : Response::deny('You can\'t detach permissions from a role.',403);
+    }
+
     /**
      * Determine whether the user can delete the model.
      */

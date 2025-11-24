@@ -187,7 +187,7 @@ class TaskController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy_permanently($id)
+    public function destroyPermanently($id)
     {
         $task = Task::findorfail($id);
 

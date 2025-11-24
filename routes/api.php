@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TaskController;
@@ -25,7 +26,7 @@ Route::controller(TaskController::class)->group(function() {
     Route::put('/update-task/{task}', 'update')->name('update-task');
     Route::delete('/delete-task/{task}', 'destroy')->name('delete-task');
     Route::put('/restore-task/{task}', 'restore')->name('restore-task');
-    Route::delete('/delete-task-permanently/{tasks}', 'destroy_permanently')->name('delete-task-permanently');
+    Route::delete('/delete-task-permanently/{tasks}', 'destroyPermanently')->name('delete-task-permanently');
 });
 
 Route::controller(RoleController::class)->group(function(){
@@ -34,10 +35,22 @@ Route::controller(RoleController::class)->group(function(){
    Route::get('/roles', 'index')->name('roles');
    Route::get('/add-role', 'create')->name('role-add-form');
    Route::post('/add-role', 'store')->name('add-role');
+   Route::post('/attach-permission-to-role/{id}','attachPermissions')->name('attach-permission-to-role');
+   Route::delete('/detach-permission-from-role','detachPermissions')->name('detach-permission-from-role');
    Route::get('/role/{id}', 'show')->name('show-role');
    Route::get('/edit-role/{role}', 'edit')->name('edit-role');
    Route::put('/update-role/{role}', 'update')->name('update-role');
    Route::delete('/delete-role/{id}', 'destroy')->name('delete-role');
    Route::put('/restore-role/{id}', 'restore')->name('restore-role');
-   Route::delete('/delete-role-permanently/{id}', 'delete_permanently')->name('delete-role-permanently');
+   Route::delete('/delete-role-permanently/{id}', 'deletePermanently')->name('delete-role-permanently');
+});
+
+Route::controller(PermissionController::class)->group(function(){
+    Route::get('/get-permissions', 'getPermissions')->name('get-permissions');
+    Route::post('/add-permission', 'store')->name('add-permission');
+    Route::get('/get-permission/{id}', 'getPermission')->name('get-permission');
+    Route::put('/update-permission/{id}', 'update')->name('update-permission');
+    Route::delete('/delete-permission/{id}', 'destroy')->name('delete-permission');
+    Route::put('/restore-permission/{id}', 'restore')->name('restore-permission');
+    Route::delete('/delete-permission-permanently/{id}', 'deletePermanently')->name('delete-permission-permanently');
 });
