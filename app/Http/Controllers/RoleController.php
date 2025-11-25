@@ -63,6 +63,13 @@ class RoleController extends Controller
     }
 
     /**
+     * Show add permission to role page
+     */
+    public function showAssignPermissionToRole($id)
+    {
+        return inertia::render('roles/AddPermissionToRoleForm', ['role_id' => $id]);
+    }
+    /**
      * Attach permissions to a role.
      */
     public function attachPermissions(Request $request, $id)
@@ -201,6 +208,42 @@ class RoleController extends Controller
         } else {
             return response()->json(['message' => 'Role not found.'], 200);
         }
+    }
+
+    /**
+     * Show add role to user page
+     */
+    public function showAssignRoleToUser($id)
+    {
+        return inertia::render('roles/AddRoleToUserForm', ['user_id' => $id]);
+    }
+
+    /**
+     * Assign role to user
+     */
+    public function assignRoleToUser(Request $request , $user_id)
+    {
+        $user = User::find($user_id);
+
+        $this->authorize('assign', Role::class);
+
+        $user->roles()->sync($request->role_ids);
+
+        return response()->json(['message' => 'Role assigned successfully.'], 200);
+    }
+
+    /**
+     * Remove role from user
+     */
+    public function removeRoleFromUser(Request $request , $user_id)
+    {
+        $user = User::find($user_id);
+
+        $this->authorize('remove-role', Role::class);
+
+        $user->roles()->detach($request->role_ids);
+
+        return response()->json(['message' => 'Role removed successfully.'], 200);
     }
 
 }

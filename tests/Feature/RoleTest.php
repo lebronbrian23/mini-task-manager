@@ -62,6 +62,31 @@ class RoleTest extends TestCase
     }
 
     /**
+     * Test if a page to assign permission to role can be displayed
+     */
+    public function test_can_assign_permission_to_role_page_display()
+    {
+        $role = Role::create([
+            'name' => 'admin',
+            'description' => 'This is an admin'
+        ]);
+
+        $user = User::factory()->create();
+
+        $user->roles()->attach([$role->id]);
+
+        $user->refresh();
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('form-attach-permission-to-role', $user->id));
+
+        $response->assertStatus(200)
+            ->assertInertia();
+
+    }
+
+    /**
      * Test can attach a permission to a role
      */
     public function test_can_attach_permission_to_role()
@@ -466,6 +491,110 @@ class RoleTest extends TestCase
 
         $this->assertDatabaseMissing('roles',[
             'id' => $role->id
+        ]);
+
+    }
+
+    /**
+     * Test if a page to assign role to a user can be displayed
+     */
+    public function test_can_assign_role_to_user_page_display()
+    {
+        $role = Role::create([
+            'name' => 'admin',
+            'description' => 'This is an admin'
+        ]);
+
+        $user = User::factory()->create();
+
+        $user->roles()->attach([$role->id]);
+
+        $user->refresh();
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('form-assign-role-to-user', $user->id));
+
+        $response->assertStatus(200)
+            ->assertInertia();
+
+    }
+
+    /**
+     * Test if a role can be assigned to a user
+     */
+    public function test_can_role_be_assigned_to_user()
+    {
+        $role = Role::create([
+            'name' => 'admin',
+            'description' => 'This is an admin'
+        ]);
+
+        $user = User::factory()->create();
+
+        $user->roles()->attach([$role->id]);
+
+        $user->refresh();
+
+        $this->actingAs($user);
+
+        $new_role = Role::create([
+            'name' => 'customer',
+            'description' => 'This is a customer'
+        ]);
+
+        $new_user = User::factory()->create();
+
+        $response = $this->postJson(route('assign-role-to-user', $new_user->id), [
+            'role_ids' => [$new_role->id]
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure(['message']);
+
+        $this->assertDatabaseHas('role_user', [
+            'role_id' => $new_role->id,
+            'user_id' => $new_user->id
+        ]);
+    }
+
+    /**
+     * Test if a role can be detached from a user
+     */
+    public function test_can_role_be_detached_from_user()
+    {
+        $role = Role::create([
+            'name' => 'admin',
+            'description' => 'This is an admin'
+        ]);
+
+        $user = User::factory()->create();
+
+        $user->roles()->attach([$role->id]);
+
+        $user->refresh();
+
+        $this->actingAs($user);
+
+        $new_role = Role::create([
+            'name' => 'customer',
+            'description' => 'This is a customer'
+        ]);
+
+        $new_user = User::factory()->create();
+
+        $new_user->roles()->attach([$new_role->id]);
+
+        $response = $this->deleteJson(route('remove-role-from-user', $new_user->id), [
+            'role_ids' => [$new_role->id]
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure(['message']);
+
+        $this->assertDatabaseMissing('role_user', [
+            'role_id' => $new_role->id,
+            'user_id' => $new_user->id
         ]);
 
     }

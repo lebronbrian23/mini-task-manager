@@ -42,10 +42,9 @@ class RolePolicy
 
     /** Assign role to user
      * @param User $user
-     * @param Role $role
      * @return Response
      */
-    public function assign(User $user, Role $role): Response
+    public function assign(User $user): Response
     {
         return $user->hasRole('admin') ?  Response::allow() : Response::deny('You can\'t assign roles.',403);
     }
@@ -53,10 +52,9 @@ class RolePolicy
     /**
      * Remove role from user
      * @param User $user
-     * @param Role $role
      * @return Response
      */
-    public function removeRole(User $user, Role $role): Response
+    public function removeRole(User $user): Response
     {
         return $user->hasRole('admin') ?  Response::allow() : Response::deny('You can\'t remove roles.',403);
     }

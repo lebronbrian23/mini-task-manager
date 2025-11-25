@@ -39,6 +39,7 @@ class CreateNewUser implements CreatesNewUsers
 
         // Attach default role if it exists
         $role = Role::where('name', 'customer')->first();
+
         $user->roles()->attach([$role->id]);
 
         return $user;

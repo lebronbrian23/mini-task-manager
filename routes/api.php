@@ -32,17 +32,15 @@ Route::controller(TaskController::class)->group(function() {
 Route::controller(RoleController::class)->group(function(){
    Route::get('/get-role/{id}', 'getRole')->name('get-role');
    Route::get('/get-roles', 'getRoles')->name('get-roles');
-   Route::get('/roles', 'index')->name('roles');
-   Route::get('/add-role', 'create')->name('role-add-form');
    Route::post('/add-role', 'store')->name('add-role');
    Route::post('/attach-permission-to-role/{id}','attachPermissions')->name('attach-permission-to-role');
    Route::delete('/detach-permission-from-role','detachPermissions')->name('detach-permission-from-role');
-   Route::get('/role/{id}', 'show')->name('show-role');
-   Route::get('/edit-role/{role}', 'edit')->name('edit-role');
    Route::put('/update-role/{role}', 'update')->name('update-role');
    Route::delete('/delete-role/{id}', 'destroy')->name('delete-role');
    Route::put('/restore-role/{id}', 'restore')->name('restore-role');
    Route::delete('/delete-role-permanently/{id}', 'deletePermanently')->name('delete-role-permanently');
+   Route::post('/assign-role-to-user/{user_id}', 'assignRoleToUser')->name('assign-role-to-user');
+   Route::delete('/remove-role-from-user/{user_id}', 'removeRoleFromUser')->name('remove-role-from-user');
 });
 
 Route::controller(PermissionController::class)->group(function(){
